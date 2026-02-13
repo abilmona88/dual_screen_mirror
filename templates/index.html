@@ -5,31 +5,74 @@
   <title>Dual Reflector – iPhone + iPad</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <script defer src="{{ url_for('static', filename='ui.js') }}"></script>
 </head>
 <body>
   <div class="page">
     <header class="header">
-      <h1>Dual AirPlay Reflector</h1>
-      <p>Connect your iPhone to <strong>Reflector-iPhone</strong> and your iPad to <strong>Reflector-iPad</strong>.</p>
-      <p class="hint">Leave this tab open; streams will appear below once devices are mirroring.</p>
+      <div class="header-toolbar" aria-label="Page controls">
+        <button
+          class="ui-toggle"
+          type="button"
+          data-toggle="info"
+          aria-controls="header-info"
+          aria-pressed="false"
+        >
+          Hide instructions
+        </button>
+        <button
+          class="ui-toggle"
+          type="button"
+          data-toggle="branding"
+          aria-controls="branding-panel"
+          aria-pressed="false"
+        >
+          Hide branding
+        </button>
+      </div>
+      {% if logo_url %}
+        <img class="brand-logo" src="{{ logo_url }}" alt="Logo">
+      {% endif %}
+      <div class="header-info" id="header-info" data-section="info">
+        <h1>Dual AirPlay Reflector</h1>
+        <p>Connect your iPhone to <strong>{{ iphone_name }}</strong> and your iPad to <strong>{{ ipad_name }}</strong>.</p>
+        <p class="hint">Leave this tab open; streams will appear below once devices are mirroring.</p>
+      </div>
+
+      <details class="branding" id="branding-panel" data-section="branding">
+        <summary>Branding</summary>
+        <div class="branding-body">
+          <form class="branding-form" method="post" action="{{ url_for('upload_logo') }}" enctype="multipart/form-data">
+            <input class="branding-file" type="file" name="logo" accept="image/*" required>
+            <button class="branding-button" type="submit">Upload logo</button>
+          </form>
+          {% if logo_url %}
+            <form class="branding-form" method="post" action="{{ url_for('clear_logo') }}">
+              <button class="branding-button branding-button--danger" type="submit">Remove logo</button>
+            </form>
+          {% endif %}
+        </div>
+      </details>
     </header>
 
     <main class="devices">
-      <section class="device device-iphone">
-        <div class="device-frame iphone-frame">
-          <div class="device-notch"></div>
-          <img src="{{ url_for('stream_iphone') }}" alt="iPhone stream">
-        </div>
-        <div class="device-label">iPhone</div>
-      </section>
+	      <section class="device device-iphone">
+	        <div class="device-frame iphone-frame">
+	          <div class="device-bezel">
+	            <div class="device-notch" aria-hidden="true"></div>
+	            <img class="device-screen" src="{{ url_for('stream_iphone') }}" alt="iPhone stream">
+	          </div>
+	        </div>
+	      </section>
 
-      <section class="device device-ipad">
-        <div class="device-frame ipad-frame">
-          <img src="{{ url_for('stream_ipad') }}" alt="iPad stream">
-        </div>
-        <div class="device-label">iPad</div>
-      </section>
-    </main>
-  </div>
-</body>
-</html>\n
+	      <section class="device device-ipad">
+	        <div class="device-frame ipad-frame">
+	          <div class="device-bezel">
+	            <img class="device-screen" src="{{ url_for('stream_ipad') }}" alt="iPad stream">
+	          </div>
+	        </div>
+	      </section>
+	    </main>
+	  </div>
+	</body>
+	</html>\n
